@@ -1,12 +1,37 @@
 syntax = "proto3";
-option go_package = "ITUServer/grpc/proto";
+option go_package = "Chit-Chat/gRPC/proto";
 
-message Students {
-    repeated string students = 1;
+message Chit {
+    string chit = 1;
+    string author = 2;
+    string timeFormated = 3;
+}
+
+message Chits {
+    repeated string chit = 1;
+    repeated string author = 2;
+    repeated string timeFormated = 3;
 }
 
 message Empty {}
 
-service ITUDatabase {
-    rpc GetStudents (Empty) returns (Students) {};
+message join {
+    string author = 1;
+    string time = 2;
+}
+
+message joinRequest{
+    string author = 1;
+}
+
+message leave {
+    string author = 1;
+    string time = 2;
+}
+
+service ChitChat {
+    rpc GetChits (Empty) returns (Chits) {};
+    rpc SendChits (Chit) returns (Chits) {};
+    rpc JoinChit (Empty)  returns (join) {};
+    rpc leaveChit (Empty) returns (leave) {};
 }
