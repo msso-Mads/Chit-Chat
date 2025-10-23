@@ -5,7 +5,6 @@ import (
 	"context"
 	"log"
 	"net"
-	"sync"
 	"time"
 	"google.golang.org/grpc"
 )
@@ -13,14 +12,12 @@ import (
 // Broadcaster is the struct which encompasses broadcasting
 type Chit_service struct {
 	proto.UnimplementedChitChatServer
-	stream proto.ChitChat_GetChitsServer
-	id     string
-	active bool
+	stream proto.ChitChat_JoinChitServer
 	error  chan error
-	mu     sync.Mutex
 	chits []string
 	author []string
 	time []string
+	broadcast chan string
 }
 
 
@@ -32,14 +29,23 @@ func main() {
 
 
 
-func (server *Chit_service) JoinChit(ctx context.Context, in *proto.JoinRequest) (*proto.Join, error) {
+func (server *Chit_service) JoinChit(in *proto.JoinRequest, stream proto.ChitChat_JoinChitServer) error  {
 	author := in.Author
 	time := "your mom"
 	log.Println("Participant", author, "joined Chit Chat at logical time", time)
-	return &proto.Join{
-		Author: author,
-		Time:   time,
-	}, nil
+	joinMsg := &proto.Chits{
+		Chit : "User has joined",
+		Author : author.Name,
+		TimeFormated: time,
+
+	}
+	if err := stream.Send(joinMsg); err != nil{
+		log.Println(err)
+		return err
+	}
+
+	
+
 }
 
 /*

@@ -11,9 +11,9 @@ message Chit {
 }
 
 message Chits {
-    repeated string chit = 1;
-    repeated string author = 2;
-    repeated string timeFormated = 3;
+    string chit = 1;
+    string author = 2;
+    string timeFormated = 3;
 }
 
 message Empty {}
@@ -43,8 +43,8 @@ message Connect{
 }
 
 service ChitChat {
-    rpc GetChits (Empty) returns (stream Chits) {};
+    rpc GetChits (Empty) returns (Chits) {};
     rpc SendChits (Chit) returns (Empty) {};
-    rpc JoinChit (joinRequest)  returns (join) {};
+    rpc JoinChit (joinRequest)  returns (stream Chits) {};
     rpc leaveChit (Empty) returns (leave) {};
 }

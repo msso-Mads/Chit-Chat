@@ -83,9 +83,9 @@ func (x *Chit) GetTimeFormated() string {
 
 type Chits struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Chit          []string               `protobuf:"bytes,1,rep,name=chit,proto3" json:"chit,omitempty"`
-	Author        []string               `protobuf:"bytes,2,rep,name=author,proto3" json:"author,omitempty"`
-	TimeFormated  []string               `protobuf:"bytes,3,rep,name=timeFormated,proto3" json:"timeFormated,omitempty"`
+	Chit          string                 `protobuf:"bytes,1,opt,name=chit,proto3" json:"chit,omitempty"`
+	Author        string                 `protobuf:"bytes,2,opt,name=author,proto3" json:"author,omitempty"`
+	TimeFormated  string                 `protobuf:"bytes,3,opt,name=timeFormated,proto3" json:"timeFormated,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -120,25 +120,25 @@ func (*Chits) Descriptor() ([]byte, []int) {
 	return file_proto_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Chits) GetChit() []string {
+func (x *Chits) GetChit() string {
 	if x != nil {
 		return x.Chit
 	}
-	return nil
+	return ""
 }
 
-func (x *Chits) GetAuthor() []string {
+func (x *Chits) GetAuthor() string {
 	if x != nil {
 		return x.Author
 	}
-	return nil
+	return ""
 }
 
-func (x *Chits) GetTimeFormated() []string {
+func (x *Chits) GetTimeFormated() string {
 	if x != nil {
 		return x.TimeFormated
 	}
-	return nil
+	return ""
 }
 
 type Empty struct {
@@ -439,9 +439,9 @@ const file_proto_proto_rawDesc = "" +
 	"\x06author\x18\x02 \x01(\tR\x06author\x12\"\n" +
 	"\ftimeFormated\x18\x03 \x01(\tR\ftimeFormated\"W\n" +
 	"\x05Chits\x12\x12\n" +
-	"\x04chit\x18\x01 \x03(\tR\x04chit\x12\x16\n" +
-	"\x06author\x18\x02 \x03(\tR\x06author\x12\"\n" +
-	"\ftimeFormated\x18\x03 \x03(\tR\ftimeFormated\"\a\n" +
+	"\x04chit\x18\x01 \x01(\tR\x04chit\x12\x16\n" +
+	"\x06author\x18\x02 \x01(\tR\x06author\x12\"\n" +
+	"\ftimeFormated\x18\x03 \x01(\tR\ftimeFormated\"\a\n" +
 	"\x05Empty\";\n" +
 	"\x04join\x12\x1f\n" +
 	"\x06author\x18\x01 \x01(\v2\a.AuthorR\x06author\x12\x12\n" +
@@ -456,11 +456,11 @@ const file_proto_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tR\x04name\"B\n" +
 	"\aConnect\x12\x1f\n" +
 	"\x06author\x18\x01 \x01(\v2\a.AuthorR\x06author\x12\x16\n" +
-	"\x06active\x18\x02 \x01(\bR\x06active2\x8a\x01\n" +
-	"\bChitChat\x12\x1e\n" +
-	"\bGetChits\x12\x06.Empty\x1a\x06.Chits\"\x000\x01\x12\x1c\n" +
-	"\tSendChits\x12\x05.Chit\x1a\x06.Empty\"\x00\x12!\n" +
-	"\bJoinChit\x12\f.joinRequest\x1a\x05.join\"\x00\x12\x1d\n" +
+	"\x06active\x18\x02 \x01(\bR\x06active2\x8b\x01\n" +
+	"\bChitChat\x12\x1c\n" +
+	"\bGetChits\x12\x06.Empty\x1a\x06.Chits\"\x00\x12\x1c\n" +
+	"\tSendChits\x12\x05.Chit\x1a\x06.Empty\"\x00\x12$\n" +
+	"\bJoinChit\x12\f.joinRequest\x1a\x06.Chits\"\x000\x01\x12\x1d\n" +
 	"\tleaveChit\x12\x06.Empty\x1a\x06.leave\"\x00B\x16Z\x14Chit-Chat/gRPC/protob\x06proto3"
 
 var (
@@ -497,7 +497,7 @@ var file_proto_proto_depIdxs = []int32{
 	2, // 7: ChitChat.leaveChit:input_type -> Empty
 	1, // 8: ChitChat.GetChits:output_type -> Chits
 	2, // 9: ChitChat.SendChits:output_type -> Empty
-	3, // 10: ChitChat.JoinChit:output_type -> join
+	1, // 10: ChitChat.JoinChit:output_type -> Chits
 	5, // 11: ChitChat.leaveChit:output_type -> leave
 	8, // [8:12] is the sub-list for method output_type
 	4, // [4:8] is the sub-list for method input_type

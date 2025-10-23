@@ -7,9 +7,11 @@ import (
 	"log"
 	"os"
 	"os/user"
-
+	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"io"
+	"time"
 )
 
 func main() {
@@ -38,8 +40,11 @@ func main() {
 		log.Fatalf("Not working client 2")
 	}
 
-	log.Println(join)
+
+	go recieve(join)
+
 	send(client, username)
+
 }
 
 func send(client proto.ChitChatClient, username string) {
@@ -54,7 +59,7 @@ func send(client proto.ChitChatClient, username string) {
 				&proto.Chit{
 					Chit:         s,
 					Author:       username,
-					TimeFormated: "your mom",
+					TimeFormated: time.Now().String(),
 				},
 			)
 			if err != nil {
@@ -64,5 +69,18 @@ func send(client proto.ChitChatClient, username string) {
 			log.Println(send)
 
 		}
+	}
+}
+
+func recieve( stream grpc.ServerStreamingClient[proto.Chits]){
+	for  {
+		response, err := stream.Recv()
+		if err == io.EOF{
+			break
+		}
+		if err != nil{
+			log.Fatalf("error while recieving message")
+		}
+		fmt.Println(response)
 	}
 }
