@@ -25,7 +25,7 @@ type Chits struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Chit          string                 `protobuf:"bytes,1,opt,name=chit,proto3" json:"chit,omitempty"`
 	Author        string                 `protobuf:"bytes,2,opt,name=author,proto3" json:"author,omitempty"`
-	TimeFormated  string                 `protobuf:"bytes,3,opt,name=timeFormated,proto3" json:"timeFormated,omitempty"`
+	TimeFormated  int64                  `protobuf:"varint,3,opt,name=timeFormated,proto3" json:"timeFormated,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -74,11 +74,11 @@ func (x *Chits) GetAuthor() string {
 	return ""
 }
 
-func (x *Chits) GetTimeFormated() string {
+func (x *Chits) GetTimeFormated() int64 {
 	if x != nil {
 		return x.TimeFormated
 	}
-	return ""
+	return 0
 }
 
 type Empty struct {
@@ -117,68 +117,17 @@ func (*Empty) Descriptor() ([]byte, []int) {
 	return file_proto_proto_rawDescGZIP(), []int{1}
 }
 
-type Join struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Author        *Author                `protobuf:"bytes,1,opt,name=author,proto3" json:"author,omitempty"`
-	Time          string                 `protobuf:"bytes,2,opt,name=time,proto3" json:"time,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Join) Reset() {
-	*x = Join{}
-	mi := &file_proto_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Join) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Join) ProtoMessage() {}
-
-func (x *Join) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Join.ProtoReflect.Descriptor instead.
-func (*Join) Descriptor() ([]byte, []int) {
-	return file_proto_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *Join) GetAuthor() *Author {
-	if x != nil {
-		return x.Author
-	}
-	return nil
-}
-
-func (x *Join) GetTime() string {
-	if x != nil {
-		return x.Time
-	}
-	return ""
-}
-
 type JoinRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Author        *Author                `protobuf:"bytes,1,opt,name=author,proto3" json:"author,omitempty"`
+	Time          int64                  `protobuf:"varint,2,opt,name=time,proto3" json:"time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *JoinRequest) Reset() {
 	*x = JoinRequest{}
-	mi := &file_proto_proto_msgTypes[3]
+	mi := &file_proto_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -190,7 +139,7 @@ func (x *JoinRequest) String() string {
 func (*JoinRequest) ProtoMessage() {}
 
 func (x *JoinRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_proto_msgTypes[3]
+	mi := &file_proto_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -203,7 +152,7 @@ func (x *JoinRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JoinRequest.ProtoReflect.Descriptor instead.
 func (*JoinRequest) Descriptor() ([]byte, []int) {
-	return file_proto_proto_rawDescGZIP(), []int{3}
+	return file_proto_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *JoinRequest) GetAuthor() *Author {
@@ -213,17 +162,24 @@ func (x *JoinRequest) GetAuthor() *Author {
 	return nil
 }
 
+func (x *JoinRequest) GetTime() int64 {
+	if x != nil {
+		return x.Time
+	}
+	return 0
+}
+
 type Leave struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Author        *Author                `protobuf:"bytes,1,opt,name=author,proto3" json:"author,omitempty"`
-	Time          string                 `protobuf:"bytes,2,opt,name=time,proto3" json:"time,omitempty"`
+	Time          int64                  `protobuf:"varint,2,opt,name=time,proto3" json:"time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Leave) Reset() {
 	*x = Leave{}
-	mi := &file_proto_proto_msgTypes[4]
+	mi := &file_proto_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -235,7 +191,7 @@ func (x *Leave) String() string {
 func (*Leave) ProtoMessage() {}
 
 func (x *Leave) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_proto_msgTypes[4]
+	mi := &file_proto_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -248,7 +204,7 @@ func (x *Leave) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Leave.ProtoReflect.Descriptor instead.
 func (*Leave) Descriptor() ([]byte, []int) {
-	return file_proto_proto_rawDescGZIP(), []int{4}
+	return file_proto_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Leave) GetAuthor() *Author {
@@ -258,11 +214,11 @@ func (x *Leave) GetAuthor() *Author {
 	return nil
 }
 
-func (x *Leave) GetTime() string {
+func (x *Leave) GetTime() int64 {
 	if x != nil {
 		return x.Time
 	}
-	return ""
+	return 0
 }
 
 type Author struct {
@@ -275,7 +231,7 @@ type Author struct {
 
 func (x *Author) Reset() {
 	*x = Author{}
-	mi := &file_proto_proto_msgTypes[5]
+	mi := &file_proto_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -287,7 +243,7 @@ func (x *Author) String() string {
 func (*Author) ProtoMessage() {}
 
 func (x *Author) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_proto_msgTypes[5]
+	mi := &file_proto_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -300,7 +256,7 @@ func (x *Author) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Author.ProtoReflect.Descriptor instead.
 func (*Author) Descriptor() ([]byte, []int) {
-	return file_proto_proto_rawDescGZIP(), []int{5}
+	return file_proto_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Author) GetId() string {
@@ -317,58 +273,6 @@ func (x *Author) GetName() string {
 	return ""
 }
 
-type Connect struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Author        *Author                `protobuf:"bytes,1,opt,name=author,proto3" json:"author,omitempty"`
-	Active        bool                   `protobuf:"varint,2,opt,name=active,proto3" json:"active,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Connect) Reset() {
-	*x = Connect{}
-	mi := &file_proto_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Connect) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Connect) ProtoMessage() {}
-
-func (x *Connect) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Connect.ProtoReflect.Descriptor instead.
-func (*Connect) Descriptor() ([]byte, []int) {
-	return file_proto_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *Connect) GetAuthor() *Author {
-	if x != nil {
-		return x.Author
-	}
-	return nil
-}
-
-func (x *Connect) GetActive() bool {
-	if x != nil {
-		return x.Active
-	}
-	return false
-}
-
 var File_proto_proto protoreflect.FileDescriptor
 
 const file_proto_proto_rawDesc = "" +
@@ -377,22 +281,17 @@ const file_proto_proto_rawDesc = "" +
 	"\x05Chits\x12\x12\n" +
 	"\x04chit\x18\x01 \x01(\tR\x04chit\x12\x16\n" +
 	"\x06author\x18\x02 \x01(\tR\x06author\x12\"\n" +
-	"\ftimeFormated\x18\x03 \x01(\tR\ftimeFormated\"\a\n" +
-	"\x05Empty\";\n" +
-	"\x04join\x12\x1f\n" +
-	"\x06author\x18\x01 \x01(\v2\a.AuthorR\x06author\x12\x12\n" +
-	"\x04time\x18\x02 \x01(\tR\x04time\".\n" +
+	"\ftimeFormated\x18\x03 \x01(\x03R\ftimeFormated\"\a\n" +
+	"\x05Empty\"B\n" +
 	"\vjoinRequest\x12\x1f\n" +
-	"\x06author\x18\x01 \x01(\v2\a.AuthorR\x06author\"<\n" +
+	"\x06author\x18\x01 \x01(\v2\a.AuthorR\x06author\x12\x12\n" +
+	"\x04time\x18\x02 \x01(\x03R\x04time\"<\n" +
 	"\x05leave\x12\x1f\n" +
 	"\x06author\x18\x01 \x01(\v2\a.AuthorR\x06author\x12\x12\n" +
-	"\x04time\x18\x02 \x01(\tR\x04time\",\n" +
+	"\x04time\x18\x02 \x01(\x03R\x04time\",\n" +
 	"\x06Author\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"B\n" +
-	"\aConnect\x12\x1f\n" +
-	"\x06author\x18\x01 \x01(\v2\a.AuthorR\x06author\x12\x16\n" +
-	"\x06active\x18\x02 \x01(\bR\x06active2n\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name2n\n" +
 	"\bChitChat\x12\x1d\n" +
 	"\tSendChits\x12\x06.Chits\x1a\x06.Empty\"\x00\x12$\n" +
 	"\bJoinChit\x12\f.joinRequest\x1a\x06.Chits\"\x000\x01\x12\x1d\n" +
@@ -410,32 +309,28 @@ func file_proto_proto_rawDescGZIP() []byte {
 	return file_proto_proto_rawDescData
 }
 
-var file_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_proto_goTypes = []any{
 	(*Chits)(nil),       // 0: Chits
 	(*Empty)(nil),       // 1: Empty
-	(*Join)(nil),        // 2: join
-	(*JoinRequest)(nil), // 3: joinRequest
-	(*Leave)(nil),       // 4: leave
-	(*Author)(nil),      // 5: Author
-	(*Connect)(nil),     // 6: Connect
+	(*JoinRequest)(nil), // 2: joinRequest
+	(*Leave)(nil),       // 3: leave
+	(*Author)(nil),      // 4: Author
 }
 var file_proto_proto_depIdxs = []int32{
-	5, // 0: join.author:type_name -> Author
-	5, // 1: joinRequest.author:type_name -> Author
-	5, // 2: leave.author:type_name -> Author
-	5, // 3: Connect.author:type_name -> Author
-	0, // 4: ChitChat.SendChits:input_type -> Chits
-	3, // 5: ChitChat.JoinChit:input_type -> joinRequest
-	4, // 6: ChitChat.leaveChit:input_type -> leave
-	1, // 7: ChitChat.SendChits:output_type -> Empty
-	0, // 8: ChitChat.JoinChit:output_type -> Chits
-	1, // 9: ChitChat.leaveChit:output_type -> Empty
-	7, // [7:10] is the sub-list for method output_type
-	4, // [4:7] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	4, // 0: joinRequest.author:type_name -> Author
+	4, // 1: leave.author:type_name -> Author
+	0, // 2: ChitChat.SendChits:input_type -> Chits
+	2, // 3: ChitChat.JoinChit:input_type -> joinRequest
+	3, // 4: ChitChat.leaveChit:input_type -> leave
+	1, // 5: ChitChat.SendChits:output_type -> Empty
+	0, // 6: ChitChat.JoinChit:output_type -> Chits
+	1, // 7: ChitChat.leaveChit:output_type -> Empty
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_proto_init() }
@@ -449,7 +344,7 @@ func file_proto_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_proto_rawDesc), len(file_proto_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

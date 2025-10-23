@@ -8,23 +8,20 @@ option go_package = "Chit-Chat/gRPC/proto";
 message Chits {
     string chit = 1;
     string author = 2;
-    string timeFormated = 3;
+    int64 timeFormated = 3;
 }
 
 message Empty {}
 
-message join {
-    Author author = 1;
-    string time = 2;
-}
 
 message joinRequest{
     Author author = 1;
+    int64 time = 2;
 }
 
 message leave {
     Author author = 1;
-    string time = 2;
+    int64 time = 2;
 }
 
 message Author{
@@ -32,10 +29,6 @@ message Author{
     string name = 2;
 }
 
-message Connect{
-    Author author = 1;
-    bool active = 2;
-}
 
 service ChitChat {
     rpc SendChits (Chits) returns (Empty) {};

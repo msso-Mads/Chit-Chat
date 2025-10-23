@@ -9,11 +9,12 @@ import (
 	"log"
 	"os"
 	"os/user"
-	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
+
+var logicalTime int64 = 0
 
 func main() {
 	conn, err := grpc.NewClient("localhost:5050", grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -34,12 +35,14 @@ func main() {
 	username := s
 	uid := currentUser.Uid
 
+	logicalTime++
 	join, err := client.JoinChit(context.Background(),
 		&proto.JoinRequest{
 			Author: &proto.Author{
 				Id:   uid,
 				Name: username,
 			},
+			Time: logicalTime,
 		})
 	if err != nil {
 		log.Fatalf("Not working client 2")
@@ -59,14 +62,15 @@ func send(client proto.ChitChatClient, username string, uid string) {
 		if s == "Leave" {
 			break
 
-		} else if len(s) > 128{ 
+		} else if len(s) > 128 {
 			log.Println("Message is too long.")
 		} else {
+			logicalTime++
 			send, err := client.SendChits(context.Background(),
 				&proto.Chits{
 					Chit:         s,
 					Author:       username,
-					TimeFormated: time.Now().String(),
+					TimeFormated: logicalTime,
 				},
 			)
 			if err != nil {
@@ -77,14 +81,14 @@ func send(client proto.ChitChatClient, username string, uid string) {
 
 		}
 	}
-
+	logicalTime++
 	send, err := client.LeaveChit(context.Background(),
 		&proto.Leave{
 			Author: &proto.Author{
 				Id:   uid,
 				Name: username,
 			},
-			Time: "your mom",
+			Time: logicalTime,
 		},
 	)
 	if err != nil {
@@ -96,12 +100,13 @@ func send(client proto.ChitChatClient, username string, uid string) {
 func recieve(stream grpc.ServerStreamingClient[proto.Chits]) {
 	for {
 		response, err := stream.Recv()
+		logicalTime = max(logicalTime, response.TimeFormated) + 1
 		if err == io.EOF {
 			break
 		}
 		if err != nil {
 			log.Fatalf("error while recieving message")
 		}
-		fmt.Println(response.Author, ":", response.Chit )
+		fmt.Println(response.Author, ":", response.Chit , " - Logical Time:" , logicalTime)
 	}
 }
