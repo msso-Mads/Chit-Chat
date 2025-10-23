@@ -5,9 +5,9 @@ import (
 	"context"
 	"log"
 	"os/user"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"fmt"
 )
 
 func main(){
@@ -35,7 +35,31 @@ func main(){
 	if err != nil {
 		log.Fatalf("Not working client 2")
 	}
-
-	log.Println(join)
 	
+	log.Println(join)
+	send(client, username)
+}
+
+func send(client proto.ChitChatClient, username string){
+	for{
+		var command string
+		fmt.Scanln(&command)
+		if (command == "Leave"){
+			break
+		} else {
+			send, err := client.SendChits(context.Background(),
+			&proto.Chit{
+				Chit: command,
+				Author: username,
+				TimeFormated: "your mom",
+			},
+		)
+		if err != nil {
+			log.Fatalf("client not sending message")
+		}
+
+		log.Println(send)
+			
+		}
+	}
 }

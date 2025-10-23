@@ -459,7 +459,7 @@ const file_proto_proto_rawDesc = "" +
 	"\x06active\x18\x02 \x01(\bR\x06active2\x8a\x01\n" +
 	"\bChitChat\x12\x1e\n" +
 	"\bGetChits\x12\x06.Empty\x1a\x06.Chits\"\x000\x01\x12\x1c\n" +
-	"\tSendChits\x12\x05.Chit\x1a\x06.Chits\"\x00\x12!\n" +
+	"\tSendChits\x12\x05.Chit\x1a\x06.Empty\"\x00\x12!\n" +
 	"\bJoinChit\x12\f.joinRequest\x1a\x05.join\"\x00\x12\x1d\n" +
 	"\tleaveChit\x12\x06.Empty\x1a\x06.leave\"\x00B\x16Z\x14Chit-Chat/gRPC/protob\x06proto3"
 
@@ -496,7 +496,7 @@ var file_proto_proto_depIdxs = []int32{
 	4, // 6: ChitChat.JoinChit:input_type -> joinRequest
 	2, // 7: ChitChat.leaveChit:input_type -> Empty
 	1, // 8: ChitChat.GetChits:output_type -> Chits
-	1, // 9: ChitChat.SendChits:output_type -> Chits
+	2, // 9: ChitChat.SendChits:output_type -> Empty
 	3, // 10: ChitChat.JoinChit:output_type -> join
 	5, // 11: ChitChat.leaveChit:output_type -> leave
 	8, // [8:12] is the sub-list for method output_type

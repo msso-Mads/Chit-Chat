@@ -6,7 +6,7 @@ import (
 	"log"
 	"net"
 	"sync"
-
+	"time"
 	"google.golang.org/grpc"
 )
 
@@ -18,67 +18,19 @@ type Chit_service struct {
 	active bool
 	error  chan error
 	mu     sync.Mutex
+	chits []string
+	author []string
+	time []string
 }
 
-type Pool struct {
-	proto.UnimplementedChitChatServer
-	Connection []*Chit_service
-}
+
 
 func main() {
 	server := &Chit_service{}
 	server.start_server()
 }
 
-func (p *Pool) CreateStream(pconn *proto.Connect, stream proto.ChitChat_GetChitsServer) error {
-	conn := &Chit_service{
-		stream: stream,
-		id:     pconn.Author.Id,
-		active: true,
-		error:  make(chan error),
-	}
 
-	p.Connection = append(p.Connection, conn)
-
-	return <-conn.error
-}
-
-func (s *Pool) BroadcastMessage(ctx context.Context, msg *proto.Chits) (*proto.Empty, error) {
-	wait := sync.WaitGroup{}
-	done := make(chan int)
-
-	for _, conn := range s.Connection {
-		wait.Add(1)
-
-		go func(msg *proto.Chits, conn *Chit_service) {
-			defer wait.Done()
-
-			conn.mu.Lock()
-			defer conn.mu.Unlock()
-
-			if conn.active {
-				err := conn.stream.Send(msg)
-				log.Printf("Sending message to: %v from %v", conn.id, msg.Author)
-
-				if err != nil {
-					log.Printf("Error with Stream: %v - Error: %v\n", conn.stream, err)
-					conn.active = false
-					conn.error <- err
-				}
-
-			}
-		}(msg, conn)
-
-	}
-
-	go func() {
-		wait.Wait()
-		close(done)
-	}()
-
-	<-done
-	return &proto.Empty{}, nil
-}
 
 func (server *Chit_service) JoinChit(ctx context.Context, in *proto.JoinRequest) (*proto.Join, error) {
 	author := in.Author
@@ -98,10 +50,17 @@ func (server *Chit_service) LeaveChit(ctx context.Context, in *proto.Empty) {
 func (server *Chit_service) GetChits(ctx context.Context, in *proto.Empty){
 
 }
-
-func (server *Chit_service) SendChits(ctx context.Context, in *proto.Empty) {
-
-} */
+*/
+func (server *Chit_service) SendChits(ctx context.Context, in *proto.Chit) (*proto.Empty, error) {
+	chit := in.Chit
+	author := in.Author
+	server.chits = append(server.chits, chit)
+	server.author = append(server.author, author)
+	server.time = append(server.time, time.Now().String())
+	log.Println(author, ":", chit)
+	return &proto.Empty{
+	}, nil
+} 
 
 func (server *Chit_service) start_server() {
 	grpcServer := grpc.NewServer()

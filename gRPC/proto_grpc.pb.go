@@ -30,7 +30,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChitChatClient interface {
 	GetChits(ctx context.Context, in *Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Chits], error)
-	SendChits(ctx context.Context, in *Chit, opts ...grpc.CallOption) (*Chits, error)
+	SendChits(ctx context.Context, in *Chit, opts ...grpc.CallOption) (*Empty, error)
 	JoinChit(ctx context.Context, in *JoinRequest, opts ...grpc.CallOption) (*Join, error)
 	LeaveChit(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Leave, error)
 }
@@ -62,9 +62,9 @@ func (c *chitChatClient) GetChits(ctx context.Context, in *Empty, opts ...grpc.C
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type ChitChat_GetChitsClient = grpc.ServerStreamingClient[Chits]
 
-func (c *chitChatClient) SendChits(ctx context.Context, in *Chit, opts ...grpc.CallOption) (*Chits, error) {
+func (c *chitChatClient) SendChits(ctx context.Context, in *Chit, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Chits)
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, ChitChat_SendChits_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func (c *chitChatClient) LeaveChit(ctx context.Context, in *Empty, opts ...grpc.
 // for forward compatibility.
 type ChitChatServer interface {
 	GetChits(*Empty, grpc.ServerStreamingServer[Chits]) error
-	SendChits(context.Context, *Chit) (*Chits, error)
+	SendChits(context.Context, *Chit) (*Empty, error)
 	JoinChit(context.Context, *JoinRequest) (*Join, error)
 	LeaveChit(context.Context, *Empty) (*Leave, error)
 	mustEmbedUnimplementedChitChatServer()
@@ -113,7 +113,7 @@ type UnimplementedChitChatServer struct{}
 func (UnimplementedChitChatServer) GetChits(*Empty, grpc.ServerStreamingServer[Chits]) error {
 	return status.Errorf(codes.Unimplemented, "method GetChits not implemented")
 }
-func (UnimplementedChitChatServer) SendChits(context.Context, *Chit) (*Chits, error) {
+func (UnimplementedChitChatServer) SendChits(context.Context, *Chit) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendChits not implemented")
 }
 func (UnimplementedChitChatServer) JoinChit(context.Context, *JoinRequest) (*Join, error) {

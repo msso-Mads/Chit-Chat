@@ -44,7 +44,7 @@ message Connect{
 
 service ChitChat {
     rpc GetChits (Empty) returns (stream Chits) {};
-    rpc SendChits (Chit) returns (Chits) {};
+    rpc SendChits (Chit) returns (Empty) {};
     rpc JoinChit (joinRequest)  returns (join) {};
     rpc leaveChit (Empty) returns (leave) {};
 }
