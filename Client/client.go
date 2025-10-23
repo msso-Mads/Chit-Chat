@@ -3,9 +3,11 @@ package main
 import (
 	proto "Chit-Chat/gRPC"
 	"context"
-    "log"
-    "google.golang.org/grpc"
-    "google.golang.org/grpc/credentials/insecure"
+	"log"
+	"os/user"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main(){
@@ -14,14 +16,20 @@ func main(){
 		log.Fatalf("Not working client 1")
 	}
 
+    currentUser, err := user.Current()
+    if err != nil {
+        log.Fatalf(err.Error())
+    }
+
 	client := proto.NewChitChatClient(conn)
-	
+	username := currentUser.Username
+	uid := currentUser.Uid
 		
 	join, err := client.JoinChit(context.Background(), 
 		&proto.JoinRequest{
 			Author: &proto.Author{
-				Id: "1",
-				Name: "Vee",
+				Id: uid,
+				Name: username,
 			},
 		})
 	if err != nil {
