@@ -4,11 +4,6 @@ syntax = "proto3";
 
 option go_package = "Chit-Chat/gRPC/proto";
 
-message Chit {
-    string chit = 1;
-    string author = 2;
-    string timeFormated = 3;
-}
 
 message Chits {
     string chit = 1;
@@ -43,8 +38,7 @@ message Connect{
 }
 
 service ChitChat {
-    rpc GetChits (Empty) returns (Chits) {};
-    rpc SendChits (Chit) returns (Empty) {};
+    rpc SendChits (Chits) returns (Empty) {};
     rpc JoinChit (joinRequest)  returns (stream Chits) {};
-    rpc leaveChit (Empty) returns (leave) {};
+    rpc leaveChit (leave) returns (Empty) {};
 }

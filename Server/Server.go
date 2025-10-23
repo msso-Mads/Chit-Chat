@@ -5,19 +5,17 @@ import (
 	"context"
 	"log"
 	"net"
-	"time"
 	"google.golang.org/grpc"
+	"sync"
 )
 
 // Broadcaster is the struct which encompasses broadcasting
 type Chit_service struct {
 	proto.UnimplementedChitChatServer
-	stream proto.ChitChat_JoinChitServer
 	error  chan error
-	chits []string
-	author []string
-	time []string
 	broadcast chan string
+	chatters map[string]chan *proto.Chits
+	mu sync.Mutex
 }
 
 
@@ -29,46 +27,81 @@ func main() {
 
 
 
-func (server *Chit_service) JoinChit(in *proto.JoinRequest, stream proto.ChitChat_JoinChitServer) error  {
+func (server *Chit_service) JoinChit( in *proto.JoinRequest, 
+	stream proto.ChitChat_JoinChitServer) error  {
 	author := in.Author
+
+	msgChan := make(chan *proto.Chits)
+
+	server.mu.Lock()
+	server.chatters[author.Name] = msgChan
+	server.mu.Unlock()
+
 	time := "your mom"
-	log.Println("Participant", author, "joined Chit Chat at logical time", time)
+	log.Println("Participant", author.Name, "joined Chit Chat at logical time", time)
 	joinMsg := &proto.Chits{
 		Chit : "User has joined",
 		Author : author.Name,
 		TimeFormated: time,
 
 	}
+
 	if err := stream.Send(joinMsg); err != nil{
 		log.Println(err)
 		return err
+	}
+
+	for{ select{
+	case msg := <- msgChan:
+		if err := stream.Send(msg); err != nil {
+			return err
+		}
+	
+		case <-stream.Context().Done():
+			log.Println("Stream ended")
+			return nil
+		}
+
+		
 	}
 
 	
 
 }
 
-/*
-func (server *Chit_service) LeaveChit(ctx context.Context, in *proto.Empty) {
 
+func (server *Chit_service) LeaveChit(ctx context.Context, in *proto.Leave) (*proto.Empty, error) {
+	author := in.Author
+	
+	log.Println("Participant", author.Name, "left Chit Chat at logical time your mom")
+
+	ctx.Done();
+
+	
+	return &proto.Empty{
+
+	}, nil
 }
 
-func (server *Chit_service) GetChits(ctx context.Context, in *proto.Empty){
-
-}
-*/
-func (server *Chit_service) SendChits(ctx context.Context, in *proto.Chit) (*proto.Empty, error) {
+func (server *Chit_service) SendChits(ctx context.Context, in *proto.Chits) (*proto.Empty, error) {
 	chit := in.Chit
 	author := in.Author
-	server.chits = append(server.chits, chit)
-	server.author = append(server.author, author)
-	server.time = append(server.time, time.Now().String())
+
+	
+
 	log.Println(author, ":", chit)
+	for key, value := range server.chatters{
+			if key != author{
+				value <- in
+			}
+	}
 	return &proto.Empty{
 	}, nil
 } 
 
 func (server *Chit_service) start_server() {
+	server.broadcast = make(chan string)
+	server.chatters = make(map[string]chan *proto.Chits)
 	grpcServer := grpc.NewServer()
 	listener, err := net.Listen("tcp", ":5050")
 
@@ -85,5 +118,7 @@ func (server *Chit_service) start_server() {
 	}
 
 	log.Println("the server has started")
+
+
 
 }

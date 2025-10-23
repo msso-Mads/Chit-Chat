@@ -19,7 +19,6 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ChitChat_GetChits_FullMethodName  = "/ChitChat/GetChits"
 	ChitChat_SendChits_FullMethodName = "/ChitChat/SendChits"
 	ChitChat_JoinChit_FullMethodName  = "/ChitChat/JoinChit"
 	ChitChat_LeaveChit_FullMethodName = "/ChitChat/leaveChit"
@@ -29,10 +28,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChitChatClient interface {
-	GetChits(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Chits, error)
-	SendChits(ctx context.Context, in *Chit, opts ...grpc.CallOption) (*Empty, error)
+	SendChits(ctx context.Context, in *Chits, opts ...grpc.CallOption) (*Empty, error)
 	JoinChit(ctx context.Context, in *JoinRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Chits], error)
-	LeaveChit(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Leave, error)
+	LeaveChit(ctx context.Context, in *Leave, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type chitChatClient struct {
@@ -43,17 +41,7 @@ func NewChitChatClient(cc grpc.ClientConnInterface) ChitChatClient {
 	return &chitChatClient{cc}
 }
 
-func (c *chitChatClient) GetChits(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Chits, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Chits)
-	err := c.cc.Invoke(ctx, ChitChat_GetChits_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *chitChatClient) SendChits(ctx context.Context, in *Chit, opts ...grpc.CallOption) (*Empty, error) {
+func (c *chitChatClient) SendChits(ctx context.Context, in *Chits, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, ChitChat_SendChits_FullMethodName, in, out, cOpts...)
@@ -82,9 +70,9 @@ func (c *chitChatClient) JoinChit(ctx context.Context, in *JoinRequest, opts ...
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type ChitChat_JoinChitClient = grpc.ServerStreamingClient[Chits]
 
-func (c *chitChatClient) LeaveChit(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Leave, error) {
+func (c *chitChatClient) LeaveChit(ctx context.Context, in *Leave, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Leave)
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, ChitChat_LeaveChit_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -96,10 +84,9 @@ func (c *chitChatClient) LeaveChit(ctx context.Context, in *Empty, opts ...grpc.
 // All implementations must embed UnimplementedChitChatServer
 // for forward compatibility.
 type ChitChatServer interface {
-	GetChits(context.Context, *Empty) (*Chits, error)
-	SendChits(context.Context, *Chit) (*Empty, error)
+	SendChits(context.Context, *Chits) (*Empty, error)
 	JoinChit(*JoinRequest, grpc.ServerStreamingServer[Chits]) error
-	LeaveChit(context.Context, *Empty) (*Leave, error)
+	LeaveChit(context.Context, *Leave) (*Empty, error)
 	mustEmbedUnimplementedChitChatServer()
 }
 
@@ -110,16 +97,13 @@ type ChitChatServer interface {
 // pointer dereference when methods are called.
 type UnimplementedChitChatServer struct{}
 
-func (UnimplementedChitChatServer) GetChits(context.Context, *Empty) (*Chits, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetChits not implemented")
-}
-func (UnimplementedChitChatServer) SendChits(context.Context, *Chit) (*Empty, error) {
+func (UnimplementedChitChatServer) SendChits(context.Context, *Chits) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendChits not implemented")
 }
 func (UnimplementedChitChatServer) JoinChit(*JoinRequest, grpc.ServerStreamingServer[Chits]) error {
 	return status.Errorf(codes.Unimplemented, "method JoinChit not implemented")
 }
-func (UnimplementedChitChatServer) LeaveChit(context.Context, *Empty) (*Leave, error) {
+func (UnimplementedChitChatServer) LeaveChit(context.Context, *Leave) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LeaveChit not implemented")
 }
 func (UnimplementedChitChatServer) mustEmbedUnimplementedChitChatServer() {}
@@ -143,26 +127,8 @@ func RegisterChitChatServer(s grpc.ServiceRegistrar, srv ChitChatServer) {
 	s.RegisterService(&ChitChat_ServiceDesc, srv)
 }
 
-func _ChitChat_GetChits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChitChatServer).GetChits(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ChitChat_GetChits_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChitChatServer).GetChits(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ChitChat_SendChits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Chit)
+	in := new(Chits)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -174,7 +140,7 @@ func _ChitChat_SendChits_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: ChitChat_SendChits_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChitChatServer).SendChits(ctx, req.(*Chit))
+		return srv.(ChitChatServer).SendChits(ctx, req.(*Chits))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -191,7 +157,7 @@ func _ChitChat_JoinChit_Handler(srv interface{}, stream grpc.ServerStream) error
 type ChitChat_JoinChitServer = grpc.ServerStreamingServer[Chits]
 
 func _ChitChat_LeaveChit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(Leave)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -203,7 +169,7 @@ func _ChitChat_LeaveChit_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: ChitChat_LeaveChit_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChitChatServer).LeaveChit(ctx, req.(*Empty))
+		return srv.(ChitChatServer).LeaveChit(ctx, req.(*Leave))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -215,10 +181,6 @@ var ChitChat_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "ChitChat",
 	HandlerType: (*ChitChatServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetChits",
-			Handler:    _ChitChat_GetChits_Handler,
-		},
 		{
 			MethodName: "SendChits",
 			Handler:    _ChitChat_SendChits_Handler,
