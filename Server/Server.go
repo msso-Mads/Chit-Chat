@@ -6,7 +6,6 @@ import (
 	"log"
 	"net"
 	"sync"
-
 	"google.golang.org/grpc"
 )
 
@@ -63,7 +62,6 @@ func (server *Chit_service) JoinChit(in *proto.JoinRequest,
 			log.Println("Stream ended")
 			return nil
 
-		
 		}
 
 	}
@@ -86,7 +84,7 @@ func (server *Chit_service) LeaveChit(ctx context.Context, in *proto.Leave) (*pr
 	log.Println(msg)
 
 	ctx.Done()
-
+	delete(server.chatters, author.Name)
 	server.broadcast <- chit
 
 	return &proto.Empty{}, nil
@@ -137,6 +135,8 @@ func (server *Chit_service) StartBroadcaster() {
 				default:
 					// Avoid blocking slow clients
 				}
+				
+
 			}
 			server.mu.Unlock()
 		}
