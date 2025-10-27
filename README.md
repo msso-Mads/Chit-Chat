@@ -13,8 +13,11 @@ The program currently only runs on a localhost.
 Steps to start using the program:
 
 -Start the server up (Server/Server.go)
+
 -Start a client up (Client/client.go)
+
 -Enter a username
+
 -Chat whatever you want
 
 When you wanna leave, just write Leave and the program will automatically disconnect you from the server.
