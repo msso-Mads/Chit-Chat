@@ -5,6 +5,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"sync"
 
@@ -19,6 +20,7 @@ type Chit_service struct {
 	chatters    map[string]chan *proto.Chits
 	mu          sync.Mutex
 	logicalTime int64
+	grpc        *grpc.Server
 }
 
 func main() {
@@ -91,6 +93,14 @@ func (server *Chit_service) LeaveChit(ctx context.Context, in *proto.Leave) (*pr
 	ctx.Done()
 	delete(server.chatters, author.Name)
 
+	if len(server.chatters) == 0 {
+		log.Println("Server is closing")
+
+		server.grpc.Stop()
+		log.Println("Server stopped")
+		os.Exit(0)
+	}
+
 	server.broadcast <- chit
 
 	return &proto.Empty{}, nil
@@ -113,22 +123,22 @@ func (server *Chit_service) SendChits(ctx context.Context, in *proto.Chits) (*pr
 
 func (server *Chit_service) start_server() {
 	server.StartBroadcaster()
-	grpcServer := grpc.NewServer()
+	server.grpc = grpc.NewServer()
 	listener, err := net.Listen("tcp", ":5050")
 
 	if err != nil {
 		log.Fatalf("Did not work 1")
 	}
 
-	proto.RegisterChitChatServer(grpcServer, server)
+	log.Println("the server has started")
 
-	err = grpcServer.Serve(listener)
+	proto.RegisterChitChatServer(server.grpc, server)
+
+	err = server.grpc.Serve(listener)
 
 	if err != nil {
 		log.Fatalf("Did not work 2")
 	}
-
-	log.Println("the server has started")
 
 }
 
