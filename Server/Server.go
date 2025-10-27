@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"sync"
+	"time"
 
 	"google.golang.org/grpc"
 )
@@ -93,15 +94,22 @@ func (server *Chit_service) LeaveChit(ctx context.Context, in *proto.Leave) (*pr
 	ctx.Done()
 	delete(server.chatters, author.Name)
 
+	server.broadcast <- chit
+	
 	if len(server.chatters) == 0 {
 		log.Println("Server is closing")
-
-		server.grpc.Stop()
-		log.Println("Server stopped")
-		os.Exit(0)
+		go func(){
+			time.Sleep(10*time.Second)
+			log.Println("Server stopped")
+			server.grpc.Stop()
+			time.Sleep(10*time.Second)
+			os.Exit(0)
+		}()
+		
+		
 	}
 
-	server.broadcast <- chit
+	
 
 	return &proto.Empty{}, nil
 }
