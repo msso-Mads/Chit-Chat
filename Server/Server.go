@@ -104,10 +104,9 @@ func (server *Chit_service) SendChits(ctx context.Context, in *proto.Chits) (*pr
 
 	log.Println(author, ":", chit, " - Logical time", server.logicalTime)
 
-	for key, value := range server.chatters {
-		if key != author {
-			value <- in
-		}
+	for _, value := range server.chatters {
+		value <- in
+
 	}
 	return &proto.Empty{}, nil
 }
