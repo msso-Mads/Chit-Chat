@@ -5,9 +5,11 @@ Program by Madeleine, Vee and Mads
 Welcome to our chat program called Chit-Chat.
 
 Description:
+
 Wanna chat with people using a new tool? Then this is the tool for you.
 
 How to Use:
+
 The program currently only runs on a localhost.
 
 Steps to start using the program:
