@@ -21,7 +21,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Not working client 1")
 	}
-
+	log.Println("Client has connected to server")
 	currentUser, err := user.Current()
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -95,6 +95,7 @@ func send(client proto.ChitChatClient, username string, uid string) {
 		log.Fatalf("client not leaving")
 	}
 	log.Println(send)
+	log.Println("Client has left the server")
 }
 
 func recieve(stream grpc.ServerStreamingClient[proto.Chits]) {

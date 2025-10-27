@@ -50,7 +50,7 @@ func (server *Chit_service) JoinChit(in *proto.JoinRequest,
 
 	joinMsg := &proto.Chits{
 		Chit:         msg,
-		Author:       "system",
+		Author:       "Server",
 		TimeFormated: server.logicalTime,
 	}
 
@@ -85,7 +85,7 @@ func (server *Chit_service) LeaveChit(ctx context.Context, in *proto.Leave) (*pr
 
 	chit := &proto.Chits{
 		Chit:         msg,
-		Author:       "system",
+		Author:       "Server",
 		TimeFormated: server.logicalTime,
 	}
 
@@ -120,7 +120,7 @@ func (server *Chit_service) SendChits(ctx context.Context, in *proto.Chits) (*pr
 
 	server.logicalTime = max(server.logicalTime, in.TimeFormated) + 1
 
-	log.Println(author, ":", chit, " - Logical time", server.logicalTime)
+	log.Println("Server:",author, "sent chit:", chit, " - Logical time", server.logicalTime)
 
 	for _, value := range server.chatters {
 		value <- in
